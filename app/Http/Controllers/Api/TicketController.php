@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TicketResource;
+use App\Http\Resources\TicketsResourceCollection;
 use App\Ticket;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,16 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() : TicketsResourceCollection
     {
-        //
+        // show all tickets to moderator or filter them if user is client
+        if (auth()->user()->role_id == 1) {
+            $tickets = Ticket::all();
+        } else {
+            $tickets = Ticket::where('user_id', auth()->user()->id)->get();
+        }
+
+        return new TicketsResourceCollection($tickets);
     }
 
     /**
@@ -45,9 +53,16 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id) : TicketResource
     {
-        //
+        $ticket = Ticket::findOrFail($id);
+
+        // check whether authenticated user is creator if ticket
+        if (auth()->user()->id != $ticket->user_id) {
+            return response()->json(error);
+        }
+
+        return new TicketResource($ticket);
     }
 
     /**
@@ -59,17 +74,12 @@ class TicketController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-    }
+        $ticket = Ticket::findOrFail($id);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        // close ticket
+        $ticket->is_active = false;
+        $ticket->save();
+
+        return new TicketResource($ticket);
     }
 }
