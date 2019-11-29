@@ -22,3 +22,7 @@ Route::post('login', 'Api\UserController@login');
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('details', 'Api\UserController@details');
 });
+
+Route::group(['middleware' => ['auth:api', 'scopes:client']], function(){
+    Route::post('tickets', 'Api\TicketController@store');
+});
