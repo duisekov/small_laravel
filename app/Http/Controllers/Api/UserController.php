@@ -25,4 +25,10 @@ class UserController extends Controller
             return response()->json(['error' => 'Unauthorized', 401]);
         }
     }
+
+    public function logout()
+    {
+        $user = Auth::user()->token();
+        $user->revoke();
+    }
 }
