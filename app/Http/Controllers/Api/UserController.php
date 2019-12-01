@@ -25,10 +25,4 @@ class UserController extends Controller
             return response()->json(['error' => 'Unauthorized', 401]);
         }
     }
-
-    public function details()
-    {
-        $user = Auth::user();
-        return response()->json(['success' => $user], $this-> successStatus);
-    }
 }
