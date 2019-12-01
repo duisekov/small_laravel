@@ -20,7 +20,7 @@ class UserController extends Controller
                 $success['token'] = $user->createToken('small', ['client'])->accessToken;
             }
 
-            return response()->json(['success' => $success], $this->successStatus);
+            return response()->json(['token' => $success, 'user' => $user], $this->successStatus);
         } else {
             return response()->json(['error' => 'Unauthorized', 401]);
         }
