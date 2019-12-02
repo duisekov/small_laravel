@@ -2063,6 +2063,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'list',
   mounted: function mounted() {
@@ -2082,7 +2085,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     closeTicket: function closeTicket(id) {
-      console.log(this.currentUser.token);
       axios.put("/api/tickets/".concat(id), {}, {
         headers: {
           "Authorization": "Bearer ".concat(this.currentUser.token)
@@ -2104,7 +2106,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -2168,10 +2169,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    add: function add() {
+    newTicket: function newTicket() {
       var _this = this;
 
-      console.log(this.$data.ticket);
       axios.post('/api/tickets', this.$data.ticket, {
         headers: {
           "Authorization": "Bearer ".concat(this.currentUser.token)
@@ -2201,6 +2201,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'view',
   created: function created() {
@@ -2213,15 +2243,38 @@ __webpack_require__.r(__webpack_exports__);
     }).then(function (response) {
       _this.ticket = response.data.data;
     });
+    axios.get("/api/tickets/".concat(this.$route.params.id, "/messages"), {
+      headers: {
+        "Authorization": "Bearer ".concat(this.currentUser.token)
+      }
+    }).then(function (response) {
+      _this.messages = response.data.data;
+    });
   },
   data: function data() {
     return {
-      ticket: null
+      ticket: null,
+      messages: [],
+      message: {
+        text: ''
+      }
     };
   },
   computed: {
     currentUser: function currentUser() {
       return this.$store.getters.currentUser;
+    }
+  },
+  methods: {
+    newMessage: function newMessage() {
+      console.log(this.$data.ticket);
+      axios.post("/api/tickets/".concat(this.$route.params.id, "/messages"), this.$data.message, {
+        headers: {
+          "Authorization": "Bearer ".concat(this.currentUser.token)
+        }
+      }).then(function (response) {
+        window.location.reload();
+      });
     }
   }
 });
@@ -37995,94 +38048,104 @@ var render = function() {
               _vm._v("Тикеты отсутствуют")
             ])
           ]
-        : _vm._l(_vm.tickets, function(ticket) {
-            return _c("div", { key: ticket.id, staticClass: "card mt-4" }, [
-              _c("div", { staticClass: "card-header" }, [
-                _c("div", { staticClass: "float-left" }, [
-                  _vm._v(_vm._s(ticket.user_id))
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "float-right" }, [
-                  _vm._v(
-                    _vm._s(ticket.department_id) +
-                      "  " +
-                      _vm._s(ticket.created_at)
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c("h5", { staticClass: "card-title" }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(ticket.title) +
-                      "\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(ticket.description) +
-                      "\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                ticket.last_response
-                  ? _c("div", [
-                      _c("hr"),
-                      _vm._v(
-                        "\n                        Последний ответ:\n                        "
-                      ),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "float-left" }, [
-                        _vm._v(_vm._s(ticket.last_response.text))
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "float-right" }, [
-                        _vm._v(_vm._s(ticket.last_response.created_at))
-                      ])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("br"),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "float-left" },
-                  [
-                    _c(
-                      "router-link",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { to: "/tickets/" + ticket.id }
-                      },
-                      [_vm._v("К диалогу")]
+        : [
+            _c("h2", { attrs: { align: "center" } }, [
+              _vm._v("Просмотр всех тикетов")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.tickets, function(ticket) {
+              return _c("div", { key: ticket.id, staticClass: "card mt-4" }, [
+                _c("div", { staticClass: "card-header" }, [
+                  _c("div", { staticClass: "float-left" }, [
+                    _vm._v(_vm._s(ticket.user.name))
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "float-right" }, [
+                    _vm._v(
+                      _vm._s(ticket.department.name) +
+                        "  " +
+                        _vm._s(ticket.created_at)
                     )
-                  ],
-                  1
-                ),
+                  ])
+                ]),
                 _vm._v(" "),
-                _vm.currentUser.role_id == 1 && ticket.is_active == 1
-                  ? _c("div", { staticClass: "float-right" }, [
+                _c("div", { staticClass: "card-body" }, [
+                  _c("h5", { staticClass: "card-title" }, [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(ticket.title) +
+                        "\n                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(ticket.description) +
+                        "\n                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  ticket.last_response
+                    ? _c("div", [
+                        _c("hr"),
+                        _vm._v(
+                          "\n                    Последний ответ:\n                    "
+                        ),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "float-left" }, [
+                          _vm._v(_vm._s(ticket.last_response.text))
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "float-right" }, [
+                          _vm._v(_vm._s(ticket.last_response.created_at))
+                        ])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "float-left" },
+                    [
                       _c(
-                        "button",
+                        "router-link",
                         {
-                          staticClass: "btn btn-danger mb-2 mr-3",
-                          on: {
-                            click: function($event) {
-                              return _vm.closeTicket(ticket.id)
-                            }
-                          }
+                          staticClass: "btn btn-primary",
+                          attrs: { to: "/tickets/" + ticket.id }
                         },
-                        [_vm._v("Закрыть тикет")]
+                        [_vm._v("К диалогу")]
                       )
-                    ])
-                  : _vm._e()
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _vm.currentUser.role_id == 1 && ticket.is_active == 1
+                    ? _c("div", { staticClass: "float-right" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger mb-2 mr-3",
+                            on: {
+                              click: function($event) {
+                                return _vm.closeTicket(ticket.id)
+                              }
+                            }
+                          },
+                          [_vm._v("Закрыть тикет")]
+                        )
+                      ])
+                    : _c("div", { staticClass: "float-right mt-2" }, [
+                        _vm._v(
+                          "\n                    Тикет закрыт\n                "
+                        )
+                      ])
+                ])
               ])
-            ])
-          })
+            })
+          ]
     ],
     2
   )
@@ -38111,18 +38174,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c(
-        "div",
-        { staticClass: "col-md-8" },
-        [
-          _c("h2", { attrs: { align: "center" } }, [
-            _vm._v("Просмотр всех тикетов")
-          ]),
-          _vm._v(" "),
-          _c("router-view")
-        ],
-        1
-      )
+      _c("div", { staticClass: "col-md-8" }, [_c("router-view")], 1)
     ])
   ])
 }
@@ -38155,7 +38207,7 @@ var render = function() {
         on: {
           submit: function($event) {
             $event.preventDefault()
-            return _vm.add($event)
+            return _vm.newTicket($event)
           }
         }
       },
@@ -38287,9 +38339,125 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _vm.ticket
     ? _c("div", { staticClass: "view-ticket" }, [
-        _c("h5", [_vm._v(_vm._s(_vm.ticket.title))]),
+        _c("h2", { attrs: { align: "center" } }, [_vm._v("Тикет")]),
         _vm._v(" "),
-        _c("h5", [_vm._v(_vm._s(_vm.ticket.description))])
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "float-left" }, [
+              _vm._v(_vm._s(_vm.ticket.user_id))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "float-right" }, [
+              _vm._v(
+                _vm._s(_vm.ticket.department_id) +
+                  "  " +
+                  _vm._s(_vm.ticket.created_at)
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("h5", { staticClass: "card-title" }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.ticket.title) +
+                  "\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.ticket.description) +
+                  "\n            "
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.messages.length > 0
+          ? _c(
+              "div",
+              { staticClass: "messages" },
+              [
+                _c("h2", { attrs: { align: "center" } }, [_vm._v("Диалог")]),
+                _vm._v(" "),
+                _vm._l(_vm.messages, function(message) {
+                  return _c("div", { staticClass: "card mb-2" }, [
+                    _c("div", { staticClass: "card-header" }, [
+                      _c("div", { staticClass: "float-left" }, [
+                        _vm._v(_vm._s(message.user.name))
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "float-right" }, [
+                        _vm._v(_vm._s(message.created_at))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(message.text) +
+                          "\n            "
+                      )
+                    ])
+                  ])
+                })
+              ],
+              2
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.ticket.is_active == 1
+          ? _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.newMessage($event)
+                  }
+                }
+              },
+              [
+                _c("h2", { attrs: { align: "center" } }, [
+                  _vm._v("Отправить сообщение")
+                ]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.message.text,
+                      expression: "message.text"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    name: "text",
+                    cols: "30",
+                    rows: "3",
+                    placeholder: "Введите сообщение"
+                  },
+                  domProps: { value: _vm.message.text },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.message, "text", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "btn btn-success mt-2 float-right",
+                  attrs: { type: "submit", value: "Отправить сообщение" }
+                })
+              ]
+            )
+          : _vm._e()
       ])
     : _vm._e()
 }

@@ -15,9 +15,9 @@ class TicketsResourceCollection extends ResourceCollection
     public function toArray($request)
     {
         foreach ($this->collection as $ticket) {
-            $ticket->user_id = $ticket->user->name;
+            $ticket->user;
+            $ticket->department;
             $ticket['last_response'] = $ticket->messages->last();
-            $ticket->department_id = $ticket->department->name;
         }
         return [
             'data' => $this->collection,

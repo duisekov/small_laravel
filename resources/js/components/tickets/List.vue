@@ -4,10 +4,11 @@
             <h5 colspan="2" class="text-center">Тикеты отсутствуют</h5>
         </template>
         <template v-else>
+            <h2 align="center">Просмотр всех тикетов</h2>
             <div v-for="ticket in tickets" :key="ticket.id" class="card mt-4">
                 <div class="card-header">
-                    <div class="float-left">{{ ticket.user_id }}</div>
-                    <div class="float-right">{{ ticket.department_id }}  {{ticket.created_at}}</div>
+                    <div class="float-left">{{ ticket.user.name }}</div>
+                    <div class="float-right">{{ ticket.department.name }}  {{ticket.created_at}}</div>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">
@@ -26,10 +27,12 @@
                     <br>
                     <div class="float-left">
                         <router-link :to="`/tickets/${ticket.id}`" class="btn btn-primary">К диалогу</router-link>
-<!--                        <button class="btn btn-primary mb-2 ml-3">К диалогу</button>-->
                     </div>
                     <div v-if="currentUser.role_id == 1 && ticket.is_active == 1" class="float-right">
                         <button @click="closeTicket(ticket.id)" class="btn btn-danger mb-2 mr-3">Закрыть тикет</button>
+                    </div>
+                    <div v-else class="float-right mt-2">
+                        Тикет закрыт
                     </div>
                 </div>
             </div>
@@ -57,7 +60,6 @@
         },
         methods: {
             closeTicket(id) {
-                console.log(this.currentUser.token);
                 axios.put(`/api/tickets/${id}`, {}, {
                     headers: {
                         "Authorization": `Bearer ${this.currentUser.token}`

@@ -14,6 +14,11 @@ class MessagesResourceCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        foreach ($this->collection as $message){
+            $message->user;
+        }
+        return [
+            'data' => $this->collection,
+        ];
     }
 }

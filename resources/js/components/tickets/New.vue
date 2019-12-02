@@ -1,6 +1,6 @@
 <template>
     <div class="new-ticket">
-        <form @submit.prevent="add">
+        <form @submit.prevent="newTicket">
             <strong>Заголовок</strong>
             <input type="text" class="form-control" v-model="ticket.title" required>
             <strong>Описание</strong>
@@ -37,8 +37,7 @@
             }
         },
         methods: {
-            add() {
-                console.log(this.$data.ticket);
+            newTicket() {
                 axios.post('/api/tickets', this.$data.ticket, {
                     headers: {
                         "Authorization": `Bearer ${this.currentUser.token}`
