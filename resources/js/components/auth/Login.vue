@@ -12,7 +12,7 @@
 
                         <div class="form-label-group">
                             <strong>Password</strong>
-                            <input type="text" v-model="form.password" class="form-control" placeholder="Пароль" required>
+                            <input type="password" v-model="form.password" class="form-control" placeholder="Пароль" required>
                         </div>
                         <hr>
                         <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Войти</button>

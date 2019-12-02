@@ -2066,6 +2066,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'list',
   mounted: function mounted() {
@@ -2092,6 +2095,12 @@ __webpack_require__.r(__webpack_exports__);
       });
       window.location.reload();
     }
+  },
+  data: function data() {
+    return {
+      url: 'api/tickets',
+      pagination: {}
+    };
   }
 });
 
@@ -37986,7 +37995,11 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { type: "text", placeholder: "Пароль", required: "" },
+                  attrs: {
+                    type: "password",
+                    placeholder: "Пароль",
+                    required: ""
+                  },
                   domProps: { value: _vm.form.password },
                   on: {
                     input: function($event) {
@@ -38137,11 +38150,14 @@ var render = function() {
                           [_vm._v("Закрыть тикет")]
                         )
                       ])
-                    : _c("div", { staticClass: "float-right mt-2" }, [
+                    : _vm.currentUser.role_id == 1 ||
+                      (_vm.currentUser.role_id == 2 && ticket.is_active == 0)
+                    ? _c("div", { staticClass: "float-right mt-2" }, [
                         _vm._v(
                           "\n                    Тикет закрыт\n                "
                         )
                       ])
+                    : _c("div", { staticClass: "float-right" })
                 ])
               ])
             })
@@ -55341,6 +55357,7 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
       localStorage.removeItem("user");
       state.isLoggedIn = false;
       state.currentUser = null;
+      state.tickets = [];
     },
     updateTickets: function updateTickets(state, payload) {
       state.tickets = payload;

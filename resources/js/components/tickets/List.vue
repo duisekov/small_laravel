@@ -31,8 +31,11 @@
                     <div v-if="currentUser.role_id == 1 && ticket.is_active == 1" class="float-right">
                         <button @click="closeTicket(ticket.id)" class="btn btn-danger mb-2 mr-3">Закрыть тикет</button>
                     </div>
-                    <div v-else class="float-right mt-2">
+                    <div v-else-if="currentUser.role_id == 1 || currentUser.role_id == 2 && ticket.is_active == 0" class="float-right mt-2">
                         Тикет закрыт
+                    </div>
+                    <div v-else class="float-right">
+
                     </div>
                 </div>
             </div>
@@ -66,8 +69,13 @@
                     }
                 });
                 window.location.reload();
+            },
+        },
+        data() {
+            return {
+                url: 'api/tickets',
+                pagination: {}
             }
-
         }
     }
 </script>

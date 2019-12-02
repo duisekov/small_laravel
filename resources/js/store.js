@@ -31,6 +31,7 @@ export default {
             localStorage.removeItem("user");
             state.isLoggedIn = false;
             state.currentUser = null;
+            state.tickets = [];
         },
         updateTickets(state, payload) {
             state.tickets = payload;

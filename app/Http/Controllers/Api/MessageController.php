@@ -25,7 +25,7 @@ class MessageController extends Controller
             echo $e->getMessage();
         }
 
-        $messages = Message::where('ticket_id', $ticketId)->paginate();
+        $messages = Message::where('ticket_id', $ticketId)->get;
 
         return new MessagesResourceCollection($messages);
     }
