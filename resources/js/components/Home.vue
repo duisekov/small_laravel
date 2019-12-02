@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <h2>Залогинен</h2>
+        <div class="col-md-4 offset-4">
+            Добро пожаловать в службу поддержки Small
+        </div>
     </div>
 </template>
 

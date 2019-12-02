@@ -17,12 +17,13 @@ class TicketController extends Controller
      */
     public function index() : TicketsResourceCollection
     {
-        // show all tickets to moderator or filter them if user is client
+        // show all tickets for moderator or filter them if user is client
         if (auth()->user()->role_id == 1) {
             $tickets = Ticket::all();
         } else {
             $tickets = Ticket::where('user_id', auth()->user()->id)->get();
         }
+
 
         return new TicketsResourceCollection($tickets);
     }
@@ -57,8 +58,8 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOrFail($id);
 
-        // check whether authenticated user is creator if ticket
-        if (auth()->user()->id != $ticket->user_id) {
+        // check whether authenticated user is client and creator of ticket
+        if (auth()->user()->role_id == 2 && auth()->user()->id != $ticket->user_id) {
             return response()->json(error);
         }
 

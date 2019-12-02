@@ -23,10 +23,9 @@ Route::post('login', 'Api\UserController@login');
 // actions that allowed for all users
 Route::group(['middleware' => 'auth:api'], function(){
     Route::get('tickets', 'Api\TicketController@index');
-    Route::get('tickets/{id}', 'Api\TicketController@show');
+    Route::get('ticket/{id}', 'Api\TicketController@show');
 
     Route::get('tickets/{ticketId}/messages', 'Api\MessageController@index');
-    Route::get('tickets/{ticketId}/message', 'Api\MessageController@showLastMessage');
     Route::post('tickets/{ticketId}/messages', 'Api\MessageController@store');
 
     Route::post('logout', 'Api\UserController@logout');

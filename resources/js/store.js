@@ -8,7 +8,7 @@ export default {
         isLoggedIn: !!user,
         loading: false,
         auth_error: null,
-        customers: []
+        tickets: []
     },
     mutations: {
         login(state) {
@@ -32,8 +32,8 @@ export default {
             state.isLoggedIn = false;
             state.currentUser = null;
         },
-        updateCustomers(state, payload) {
-            state.customers = payload;
+        updateTickets(state, payload) {
+            state.tickets = payload;
         }
     },
     getters: {
@@ -49,13 +49,22 @@ export default {
         authError(state) {
             return state.auth_error;
         },
-        customers(state) {
-            return state.customers;
+        tickets(state) {
+            return state.tickets;
         }
     },
     actions: {
         login(context) {
             context.commit("login");
+        },
+        getTickets(context) {
+            axios.get('/api/tickets', {
+                headers: {
+                    "Authorization": `Bearer ${context.state.currentUser.token}`
+                }
+            }).then((response) => {
+                context.commit('updateTickets', response.data.data);
+            })
         }
     }
 }

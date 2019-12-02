@@ -52,23 +52,4 @@ class MessageController extends Controller
 
         return new MessageResource($message);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function showLastMessage($ticketId) : MessageResource
-    {
-        try {
-            $ticket = Ticket::findOrFail($ticketId);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-
-        $message = Message::where('ticket_id', $ticketId)->latest('created_at')->first();
-
-        return new MessageResource($message);
-    }
 }
