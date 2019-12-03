@@ -19,9 +19,9 @@ class TicketController extends Controller
     {
         // show all tickets for moderator or filter them if user is client
         if (auth()->user()->role_id == 1) {
-            $tickets = Ticket::orderBy('created_at', 'desc')->paginate(5);
+            $tickets = Ticket::latest('created_at')->paginate(15);
         } else {
-            $tickets = Ticket::where('user_id', auth()->user()->id)->paginate(5);
+            $tickets = Ticket::where('user_id', auth()->user()->id)->latest('created_at')->paginate(15);
         }
 
 

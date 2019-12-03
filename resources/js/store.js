@@ -8,7 +8,7 @@ export default {
         isLoggedIn: !!user,
         loading: false,
         auth_error: null,
-        tickets: []
+        tickets: [],
     },
     mutations: {
         login(state) {
@@ -35,7 +35,7 @@ export default {
         },
         updateTickets(state, payload) {
             state.tickets = payload;
-        }
+        },
     },
     getters: {
         isLoading(state) {
@@ -52,7 +52,7 @@ export default {
         },
         tickets(state) {
             return state.tickets;
-        }
+        },
     },
     actions: {
         login(context) {
@@ -65,7 +65,8 @@ export default {
                 }
             }).then((response) => {
                 context.commit('updateTickets', response.data.data);
+                console.log(response.data.data)
             })
-        }
+        },
     }
 }
